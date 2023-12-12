@@ -1,4 +1,28 @@
-export function handler(event) {
-  // TODO: Get all TODO items for a current user
-  return undefined
-}
+import middy from '@middy/core'
+import cors from '@middy/http-cors'
+import httpErrorHandler from '@middy/http-error-handler'
+
+import { getUserId } from '../utils.mjs'
+import { getTodoListLogic } from '../../businessLogic/todos.mjs'
+import { statusCodeEnum } from '../../utils/resultStatus'
+
+export const handler = middy()
+  .use(httpErrorHandler())
+  .use(
+    cors({
+      credentials: true
+    })
+  )
+  .handler(async (event) => {
+    // TODO: Get all TODO items for a current user
+    // get userId from jwtoken for update todo
+    const userId = getUserId(event)
+
+    // get all todo entity from user with userId
+    const todos = await getTodoListLogic(userId)
+
+    return {
+      statusCode: statusCodeEnum.OK,
+      body: JSON.stringify({ items: todos })
+    }
+  })
