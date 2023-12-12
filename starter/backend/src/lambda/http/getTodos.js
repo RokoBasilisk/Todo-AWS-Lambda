@@ -4,7 +4,11 @@ import httpErrorHandler from '@middy/http-error-handler'
 
 import { getUserId } from '../utils.mjs'
 import { getTodoListLogic } from '../../businessLogic/todos.mjs'
-import { statusCodeEnum } from '../../utils/resultStatus'
+
+const statusCodeEnum = {
+  OK: 200,
+  CREATED_SUCCESS: 201
+}
 
 export const handler = middy()
   .use(httpErrorHandler())
@@ -20,7 +24,6 @@ export const handler = middy()
 
     // get all todo entity from user with userId
     const todos = await getTodoListLogic(userId)
-
     return {
       statusCode: statusCodeEnum.OK,
       body: JSON.stringify({ items: todos })

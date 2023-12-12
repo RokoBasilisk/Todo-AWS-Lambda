@@ -4,7 +4,11 @@ import httpErrorHandler from '@middy/http-error-handler'
 
 import { getUserId } from '../utils.mjs'
 import { createTodoLogic } from '../../businessLogic/todos.mjs'
-import { statusCodeEnum } from '../../utils/resultStatus'
+
+const statusCodeEnum = {
+  OK: 200,
+  CREATED_SUCCESS: 201
+}
 
 export const handler = middy()
   .use(httpErrorHandler())

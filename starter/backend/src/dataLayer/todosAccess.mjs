@@ -7,11 +7,11 @@ import {
   UpdateCommand
 } from '@aws-sdk/lib-dynamodb'
 import { createLogger } from '../utils/logger.mjs'
-import { AWS_CONFIG } from '../utils/constanst'
 
-const logger = createLogger('todoAccess')
+const logger = createLogger('todo Access')
+
 const docClient = DynamoDBDocumentClient.from(
-  new DynamoDBClient({ region: AWS_CONFIG.REGION })
+  new DynamoDBClient({ region: 'us-east-1' })
 )
 const todosTable = process.env.TODOS_TABLE
 
@@ -46,7 +46,10 @@ export const updateTodo = async (userId, todoId, updateData) => {
     TableName: todosTable,
     Key: { userId, todoId },
     ConditionExpression: 'attribute_exists(todoId)',
-    UpdateExpression: 'set name = :n, dueDate = :due, done = :dn',
+    UpdateExpression: 'set #name = :n, dueDate = :due, done = :dn',
+    ExpressionAttributeNames: {
+      '#name': 'name'
+    },
     ExpressionAttributeValues: {
       ':n': updateData.name,
       ':due': updateData.dueDate,
