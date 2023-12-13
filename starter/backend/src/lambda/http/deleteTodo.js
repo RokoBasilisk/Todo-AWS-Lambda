@@ -3,6 +3,9 @@ import cors from '@middy/http-cors'
 import httpErrorHandler from '@middy/http-error-handler'
 import { getUserId } from '../utils.mjs'
 import { deleteTodoLogic } from '../../businessLogic/todos.mjs'
+import { createLogger } from '../../utils/logger.mjs'
+
+const logger = createLogger('todos deleteTodo')
 
 const statusCodeEnum = {
   OK: 200,
@@ -24,9 +27,12 @@ export const handler = middy()
     // get userId from jwtoken for update todo
     const userId = getUserId(event)
 
+    logger.info(`delete todo ${todoId} by ${userId} at lambda deleteTodo...`)
     // update todo entity by userId, todoId
     await deleteTodoLogic(userId, todoId)
-
+    logger.info(
+      `delete todo ${todoId} by ${userId} at lambda deleteTodo successfully`
+    )
     return {
       statusCode: statusCodeEnum.OK,
       headers: {
